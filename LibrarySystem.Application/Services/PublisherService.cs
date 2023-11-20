@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Domain.Entities;
 using LibrarySystem.Domain.Interfaces;
@@ -13,16 +14,29 @@ namespace LibrarySystem.Application.Services
         private readonly IPublisherRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IValidator<PublisherDto> _publisherDtoValidator;
 
-        public PublisherService(IPublisherRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+        public PublisherService(
+            IPublisherRepository repository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IValidator<PublisherDto> publisherDtoValidator)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _publisherDtoValidator = publisherDtoValidator;
         }
+
 
         public async Task AddAsync(PublisherDto publisherDto)
         {
+            var validationResult = _publisherDtoValidator.Validate(publisherDto);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             if (await _repository.ExistsByNameAsync(publisherDto.Name))
             {
                 throw new RepetitionException(nameof(publisherDto));
@@ -53,10 +67,21 @@ namespace LibrarySystem.Application.Services
 
         public async Task UpdateAsync(PublisherDto publisherDto)
         {
+            var validationResult = _publisherDtoValidator.Validate(publisherDto);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             var existingPublisher = await _repository.GetByIdAsync(publisherDto.Id);
             if (existingPublisher is null)
             {
                 throw new NotFoundException(nameof(PublisherDto));
+            }
+
+            if (await _repository.ExistsByNameAsync(publisherDto.Name))
+            {
+                throw new RepetitionException(nameof(publisherDto));
             }
 
             _mapper.Map(publisherDto, existingPublisher);

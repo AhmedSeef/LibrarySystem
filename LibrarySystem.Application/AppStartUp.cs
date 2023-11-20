@@ -1,15 +1,17 @@
-﻿using LibrarySystem.Domain.Interfaces.Base;
-using LibrarySystem.Domain.Interfaces;
-using LibrarySystem.Infrastructure.Repositories.Base;
-using LibrarySystem.Infrastructure.Repositories;
-using Microsoft.Extensions.DependencyInjection;
-using LibrarySystem.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using LibrarySystem.Application.Services;
+﻿using FluentValidation;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Application.Mapping;
-using AutoMapper;
+using LibrarySystem.Application.Services;
+using LibrarySystem.Domain.Interfaces;
+using LibrarySystem.Domain.Interfaces.Base;
+using LibrarySystem.Infrastructure.Data;
+using LibrarySystem.Infrastructure.Repositories;
+using LibrarySystem.Infrastructure.Repositories.Base;
+using LibrarySystem.Shared.DTOs;
+using LibrarySystem.Shared.Validators;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LibrarySystem.Application
 {
@@ -32,6 +34,12 @@ namespace LibrarySystem.Application
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IPublisherService, PublisherService>();
             services.AddScoped<IBookService, BookService>();
+
+            //validitors
+            services.AddTransient<IValidator<AuthorDto>, AuthorDtoValidator>();
+            services.AddTransient<IValidator<BookDto>, BookDtoValidator>();
+            services.AddTransient<IValidator<PublisherDto>, PublisherDtoValidator>();
+
 
             //auto mapper
             services.AddAutoMapper(typeof(MappingProfile));

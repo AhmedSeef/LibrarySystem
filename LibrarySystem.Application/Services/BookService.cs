@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Domain.Entities;
 using LibrarySystem.Domain.Interfaces;
@@ -13,16 +14,28 @@ namespace LibrarySystem.Application.Services
         private readonly IBookRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IValidator<BookDto> _bookDtoValidator;
 
-        public BookService(IBookRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+        public BookService(
+            IBookRepository repository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IValidator<BookDto> bookDtoValidator)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _bookDtoValidator = bookDtoValidator;
         }
 
         public async Task AddAsync(BookDto bookDto)
         {
+            var validationResult = _bookDtoValidator.Validate(bookDto);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             if (await _repository.ExistsByNameAsync(bookDto.Name))
             {
                 throw new RepetitionException(nameof(bookDto));
@@ -53,10 +66,21 @@ namespace LibrarySystem.Application.Services
 
         public async Task UpdateAsync(BookDto bookDto)
         {
+            var validationResult = _bookDtoValidator.Validate(bookDto);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             var existingBook = await _repository.GetByIdAsync(bookDto.Id);
             if (existingBook is null)
             {
                 throw new NotFoundException(nameof(BookDto));
+            }
+
+            if (await _repository.ExistsByNameAsync(bookDto.Name))
+            {
+                throw new RepetitionException(nameof(bookDto));
             }
 
             _mapper.Map(bookDto, existingBook);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Domain.Entities;
 using LibrarySystem.Domain.Interfaces;
@@ -13,16 +14,28 @@ namespace LibrarySystem.Application.Services
         private readonly IAuthorRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IValidator<AuthorDto> _authorDtoValidator;
 
-        public AuthorService(IAuthorRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+        public AuthorService(
+            IAuthorRepository repository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IValidator<AuthorDto> authorDtoValidator)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _authorDtoValidator = authorDtoValidator;
         }
 
         public async Task AddAsync(AuthorDto authorDto)
         {
+            var validationResult = _authorDtoValidator.Validate(authorDto);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             if (await _repository.ExistsByNameAsync(authorDto.Name))
             {
                 throw new RepetitionException(nameof(authorDto));
@@ -52,10 +65,22 @@ namespace LibrarySystem.Application.Services
 
         public async Task UpdateAsync(AuthorDto authorDto)
         {
+            var validationResult = _authorDtoValidator.Validate(authorDto);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+
             var existingAuthor = await _repository.GetByIdAsync(authorDto.Id);
             if (existingAuthor is null)
             {
                 throw new NotFoundException(nameof(AuthorDto));
+            }
+
+            if (await _repository.ExistsByNameAsync(authorDto.Name))
+            {
+                throw new RepetitionException(nameof(authorDto));
             }
 
             _mapper.Map(authorDto, existingAuthor);

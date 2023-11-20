@@ -1,5 +1,8 @@
-﻿using LibrarySystem.Shared.Exceptions;
+﻿using Azure;
+using LibrarySystem.Shared.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text;
 
@@ -9,6 +12,7 @@ namespace LibrarySystem.Server.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ErrorHandlerMiddleware> _logger;
+        private static string message;
 
         public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
         {
@@ -16,7 +20,7 @@ namespace LibrarySystem.Server.Middlewares
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
@@ -24,11 +28,11 @@ namespace LibrarySystem.Server.Middlewares
             }
             catch (Exception error)
             {
-                await HandleException(context, error);
+                await HandleExceptionAsync(context, error);
             }
         }
 
-        private async Task HandleException(HttpContext context, Exception error)
+        private async Task HandleExceptionAsync(HttpContext context, Exception error)
         {
             _logger.LogError(error, "Error Handler Middleware");
 
@@ -52,6 +56,16 @@ namespace LibrarySystem.Server.Middlewares
                     return "Key Not Found Exception";
                 case RepetitionException:
                     return "The name is already saved before";
+                case FluentValidation.ValidationException e:
+                    StringBuilder stringBuilderValidationException = new StringBuilder("Validation Exception");
+                    foreach (var property in e.Errors)
+                    {
+                        stringBuilderValidationException.AppendLine(property.PropertyName);
+                        stringBuilderValidationException.Append(": ");
+                        stringBuilderValidationException.Append(property.ErrorMessage);
+                    }
+                    message = stringBuilderValidationException.ToString();
+                    return message;
                 default:
                     return "Internal Server Error";
             }
@@ -66,6 +80,8 @@ namespace LibrarySystem.Server.Middlewares
                     return (int)HttpStatusCode.NotFound;
                 case RepetitionException:
                     return (int)HttpStatusCode.Conflict;
+                case FluentValidation.ValidationException:
+                    return (int)HttpStatusCode.BadRequest;
                 default:
                     return (int)HttpStatusCode.InternalServerError;
             }
