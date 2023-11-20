@@ -34,15 +34,15 @@ namespace LibrarySystem.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<BookDto> GetByIdAsync(int id)
+        public async Task<BookWithAutorsPublishersDto> GetByIdAsync(int id)
         {
-            var book = await _repository.GetByIdAsync(id);
+            var book = await _repository.GetByIdAsync(id,entity => entity.Author,entity => entity.Publisher);
             if (book is null)
             {
-                throw new NotFoundException(nameof(BookDto));
+                throw new NotFoundException(nameof(BookWithAutorsPublishersDto));
             }
 
-            return _mapper.Map<BookDto>(book);
+            return _mapper.Map<BookWithAutorsPublishersDto>(book);
         }
 
         public async Task<IEnumerable<BookDto>> GetAllAsync(bool includeDeleted)
