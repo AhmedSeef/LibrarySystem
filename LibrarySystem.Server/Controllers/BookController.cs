@@ -1,13 +1,13 @@
-﻿using LibrarySystem.Application.Interfaces;
+﻿using Asp.Versioning;
+using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Shared.DTOs;
 using LibrarySystem.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BookController : ControllerBase
+    [ApiVersion("1.0")]
+    public class BookController : BaseController
     {
         private readonly IBookService _bookService;
 

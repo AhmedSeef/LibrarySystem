@@ -1,12 +1,12 @@
-﻿using LibrarySystem.Application.Interfaces;
+﻿using Asp.Versioning;
+using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PublisherController : ControllerBase
+    [ApiVersion("1.0")]
+    public class PublisherController : BaseController
     {
         private readonly IPublisherService _publisherService;
 

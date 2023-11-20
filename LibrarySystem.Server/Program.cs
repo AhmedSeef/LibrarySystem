@@ -1,11 +1,21 @@
+using Asp.Versioning;
 using LibrarySystem.Server.Extensions;
 using LibrarySystem.Server.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddLogging(); 
+
+//Add Error handeler middleware
 builder.Services.AddSingleton<ILogger<ErrorHandlerMiddleware>, Logger<ErrorHandlerMiddleware>>();
+
+//Add versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+});
 
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddControllers();
