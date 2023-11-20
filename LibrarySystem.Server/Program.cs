@@ -1,13 +1,21 @@
+using LibrarySystem.Server.Extensions;
+using LibrarySystem.Server.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddLogging(); 
+builder.Services.AddSingleton<ILogger<ErrorHandlerMiddleware>, Logger<ErrorHandlerMiddleware>>();
 
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
