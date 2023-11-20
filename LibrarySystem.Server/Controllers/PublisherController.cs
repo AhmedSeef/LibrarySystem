@@ -32,47 +32,23 @@ namespace LibrarySystem.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll(bool includeDeleted = false)
         {
-            try
-            {
-                var publishers = await _publisherService.GetAllAsync(includeDeleted);
-                return Ok(publishers);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
+            var publishers = await _publisherService.GetAllAsync(includeDeleted);
+            return Ok(publishers);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] PublisherDto publisherDto)
         {
-            try
-            {
-                publisherDto.Id = id; // Make sure the ID in the DTO matches the route parameter
-                await _publisherService.UpdateAsync(publisherDto);
-                return Ok(publisherDto);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
+            publisherDto.Id = id;
+            await _publisherService.UpdateAsync(publisherDto);
+            return Ok(publisherDto);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _publisherService.DeleteAsync(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
+            await _publisherService.DeleteAsync(id);
+            return Ok();
         }
     }
 }

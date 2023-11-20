@@ -19,88 +19,37 @@ namespace LibrarySystem.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] BookDto bookDto)
         {
-            try
-            {
-                await _bookService.AddAsync(bookDto);
-                return Ok(bookDto);
-            }
-            catch (RepetitionException ex)
-            {
-                return Conflict($"Book with the same title, author, and publisher already exists");
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
+            await _bookService.AddAsync(bookDto);
+            return Ok(bookDto);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var bookDto = await _bookService.GetByIdAsync(id);
-                if (bookDto != null)
-                {
-                    return Ok(bookDto);
-                }
-                else
-                {
-                    return NotFound($"Book with ID {id} not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
+            var bookDto = await _bookService.GetByIdAsync(id);
+            return Ok(bookDto);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll(bool includeDeleted = false)
         {
-            try
-            {
-                var books = await _bookService.GetAllAsync(includeDeleted);
-                return Ok(books);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
+            var books = await _bookService.GetAllAsync(includeDeleted);
+            return Ok(books);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] BookDto bookDto)
         {
-            try
-            {
-                bookDto.Id = id; // Make sure the ID in the DTO matches the route parameter
-                await _bookService.UpdateAsync(bookDto);
-                return Ok(bookDto);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
+            bookDto.Id = id;
+            await _bookService.UpdateAsync(bookDto);
+            return Ok(bookDto);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _bookService.DeleteAsync(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as needed
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
+            await _bookService.DeleteAsync(id);
+            return Ok();
         }
     }
 }
