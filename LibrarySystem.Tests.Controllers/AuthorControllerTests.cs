@@ -1,18 +1,8 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using LibrarySystem.Application.Interfaces;
-using LibrarySystem.Domain.Entities;
+﻿using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Server.Controllers;
 using LibrarySystem.Shared.DTOs;
-using LibrarySystem.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibrarySystem.Tests.Controllers
 {

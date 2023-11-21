@@ -7,7 +7,7 @@ namespace LibrarySystem.Shared.Validators
     {
         public AuthorDtoValidator()
         {
-            RuleFor(authorDto => authorDto.Name).NotEmpty().WithMessage("Name is required.")
+            RuleFor(authorDto => authorDto.Name).NotEmpty().WithMessage("Author Name is required.")
             .Length(10, 50).WithMessage("Name must be between 10 and 50 characters.");
         }
     }
