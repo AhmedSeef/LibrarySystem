@@ -49,7 +49,7 @@ namespace LibrarySystem.Application.Services
 
         public async Task<BookWithAutorsPublishersDto> GetByIdAsync(int id)
         {
-            var book = await _repository.GetByIdAsync(id,entity => entity.Author,entity => entity.Publisher);
+            var book = await _repository.GetByIdAsync(id, entity => entity.Author, entity => entity.Publisher);
             if (book is null)
             {
                 throw new NotFoundException(nameof(BookWithAutorsPublishersDto));

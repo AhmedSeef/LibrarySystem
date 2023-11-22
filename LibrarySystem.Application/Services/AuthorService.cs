@@ -37,7 +37,7 @@ namespace LibrarySystem.Application.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            if (await _repository.ExistsByNameAsync(authorDto.Name,authorDto.Id))
+            if (await _repository.ExistsByNameAsync(authorDto.Name, authorDto.Id))
             {
                 throw new RepetitionException(nameof(authorDto));
             }
@@ -49,7 +49,7 @@ namespace LibrarySystem.Application.Services
 
         public async Task<AuthorWithBooksDto> GetByIdAsync(int id)
         {
-            var author = await _repository.GetByIdAsync(id,includes: entity => entity.Books);
+            var author = await _repository.GetByIdAsync(id, includes: entity => entity.Books);
 
             if (author is null)
             {
