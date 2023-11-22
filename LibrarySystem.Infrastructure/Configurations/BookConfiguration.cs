@@ -11,15 +11,15 @@ namespace LibrarySystem.Infrastructure.Configurations
             builder.HasKey(b => b.Id);
             builder.Property(b => b.Name).IsRequired();
 
-            
+
             builder.HasOne(b => b.Author)
-                .WithMany() 
+                .WithMany()
                 .HasForeignKey(b => b.AuthorId)
                 .IsRequired();
 
-            
+
             builder.HasOne(b => b.Publisher)
-                .WithMany() 
+                .WithMany()
                 .HasForeignKey(b => b.PublisherId)
                 .IsRequired();
         }
