@@ -17,7 +17,7 @@ namespace LibrarySystem.Server.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AuthorDto authorDto)
-        { 
+        {
             await _authorService.AddAsync(authorDto);
             return Ok(authorDto);
         }

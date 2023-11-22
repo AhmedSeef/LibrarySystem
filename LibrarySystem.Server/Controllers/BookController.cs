@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using LibrarySystem.Application.Interfaces;
 using LibrarySystem.Shared.DTOs;
-using LibrarySystem.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Server.Controllers

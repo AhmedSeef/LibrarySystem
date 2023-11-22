@@ -1,8 +1,4 @@
-﻿using Azure;
-using LibrarySystem.Shared.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+﻿using LibrarySystem.Shared.Exceptions;
 using System.Net;
 using System.Text;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Server.Controllers
 {
@@ -7,6 +6,6 @@ namespace LibrarySystem.Server.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     public class BaseController : ControllerBase
     {
-        
+
     }
 }
