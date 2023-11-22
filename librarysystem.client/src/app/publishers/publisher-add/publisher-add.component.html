@@ -1,0 +1,11 @@
+<form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Publisher Name:</label>
+      <input type="text" id="name" name="name" [(ngModel)]="publisher.name" class="form-control" required
+             (blur)="onNameChange()" />
+      <div *ngIf="!isNameValid && publisher.name.length > 0" class="text-danger">Name must be between 10 and 50 characters.</div>
+    </div>
+  
+    <button type="submit" class="btn btn-primary" [disabled]="!isNameValid || !publisher.name">Add Publisher</button>
+  </form>
+  

@@ -1,0 +1,29 @@
+<form (submit)="onSubmit()" class="my-4">
+    <!-- Book Name -->
+    <div class="mb-3">
+        <label for="name" class="form-label">Book Name</label>
+        <input type="text" id="name" name="name" [(ngModel)]="book.name" class="form-control" required
+            (blur)="onNameChange()" />
+        <div *ngIf="!isNameValid && book.name.length > 0" class="text-danger">Name must be between 10 and 50
+            characters.</div>
+    </div>
+
+    <!-- Author Dropdown -->
+    <div class="mb-3">
+        <label for="authorId" class="form-label">Select Author</label>
+        <select id="authorId" name="authorId" [(ngModel)]="book.authorId" class="form-select" required>
+            <option *ngFor="let author of authors" [value]="author.id">{{ author?.name }}</option>
+        </select>
+    </div>
+
+    <!-- Publisher Dropdown -->
+    <div class="mb-3">
+        <label for="publisherId" class="form-label">Select Publisher</label>
+        <select id="publisherId" name="publisherId" [(ngModel)]="book.publisherId" class="form-select" required>
+            <option *ngFor="let publisher of publishers" [value]="publisher.id">{{ publisher?.name }}</option>
+        </select>
+    </div>
+
+    <!-- Add Book Button -->
+    <button type="submit" [disabled]="!isNameValid || !book.name" class="btn btn-primary">Save Book</button>
+</form>

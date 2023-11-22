@@ -1,6 +1,7 @@
 ﻿using LibrarySystem.Domain.Entities.Base;
 using LibrarySystem.Domain.Interfaces.Base;
 using LibrarySystem.Infrastructure.Data;
+using LibrarySystem.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -30,6 +31,20 @@ namespace LibrarySystem.Infrastructure.Repositories.Base
             }
 
             return await query.SingleOrDefaultAsync(entity => entity.Id == id);
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync(bool includeDeleted, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = includeDeleted
+                ? _context.Set<T>()
+                : _context.Set<T>().Where(x => !x.IsDeleted);
+
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, include) => current.Include(include));
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(bool includeDeleted)
@@ -76,9 +91,16 @@ namespace LibrarySystem.Infrastructure.Repositories.Base
             }
         }
 
-        public async Task<bool> ExistsByNameAsync(string name)
+        public async Task<bool> ExistsByNameAsync(string name, int id)
         {
-            return await _context.Set<T>().AnyAsync(x => x.Name == name);
+            return await _context.Set<T>().AnyAsync(x => x.Name == name && x.Id != id);
+        }
+
+        public async Task<IEnumerable<LookupItemDto>> GetLookupAsync()
+        {
+            return await _context.Set<T>().Where(x => x.IsDeleted == false)
+          .Select(e => new LookupItemDto { Id = e.Id, Name = e.Name })
+          .ToListAsync();
         }
     }
 }

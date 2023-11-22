@@ -1,0 +1,34 @@
+
+<div class="mb-2">
+    <button class="btn btn-success mr-2" (click)="redirectToPublisherForm()">Add New Publisher</button>
+    <label>
+        <input type="checkbox"  (change)="toggleIncludeDeleted()" [(ngModel)]="includeDeleted"> Include Deleted Publishers
+    </label>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Created At</th>
+            <th>Edited At</th>
+            <th>Is Deleted</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let publisher of publishers" [ngClass]="{'bg-success': !publisher.isDeleted, 'bg-danger': publisher.isDeleted}">
+            <td>{{ publisher.name }}</td>
+            <td>{{ publisher.createdAt | date: 'short' }}</td>
+            <td>{{ publisher.editedAt ? (publisher.editedAt | date: 'short') : '-' }}</td>
+            <td>
+                <input type="checkbox" [checked]="publisher.isDeleted" disabled />
+            </td>
+            <td>
+                <button class="btn btn-primary" (click)="openEditModal(publisher)">Edit</button>
+                <button class="btn btn-danger" (click)="openDeleteModal(publisher)">Delete</button>
+                <button class="btn btn-info" (click)="openViewModal(publisher)">View</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

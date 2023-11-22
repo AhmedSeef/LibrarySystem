@@ -10,10 +10,16 @@ namespace LibrarySystem.Server.Controllers
     public class BookController : BaseController
     {
         private readonly IBookService _bookService;
+        private readonly IPublisherService _publisherService;
+        private readonly IAuthorService _authorService;
 
-        public BookController(IBookService bookService)
+
+
+        public BookController(IBookService bookService, IPublisherService publisherService, IAuthorService authorService)
         {
             _bookService = bookService;
+            _publisherService = publisherService;
+            _authorService = authorService;
         }
 
         [HttpPost]
@@ -50,6 +56,15 @@ namespace LibrarySystem.Server.Controllers
         {
             await _bookService.DeleteAsync(id);
             return Ok();
+        }
+
+        [HttpGet("GetPublishersAndAuthorsLookup")]
+        public async Task<IActionResult> GetPublishersAndAuthorsLookup()
+        {
+            var Publishers = await _publisherService.GetLookupAsync();
+            var Authors = await _authorService.GetLookupAsync();
+
+            return Ok(new { Publishers = Publishers, Authors = Authors });
         }
     }
 }

@@ -6,7 +6,7 @@ namespace LibrarySystem.Application.Interfaces
     {
         Task AddAsync(BookDto bookDto);
         Task<BookWithAutorsPublishersDto> GetByIdAsync(int id);
-        Task<IEnumerable<BookDto>> GetAllAsync(bool includeDeleted = false);
+        Task<IEnumerable<BookWithAutorsPublishersDto>> GetAllAsync(bool includeDeleted = false);
         Task UpdateAsync(BookDto bookDto);
         Task DeleteAsync(int id);
     }

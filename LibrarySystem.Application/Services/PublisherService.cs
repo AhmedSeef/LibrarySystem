@@ -37,7 +37,7 @@ namespace LibrarySystem.Application.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            if (await _repository.ExistsByNameAsync(publisherDto.Name))
+            if (await _repository.ExistsByNameAsync(publisherDto.Name, publisherDto.Id))
             {
                 throw new RepetitionException(nameof(publisherDto));
             }
@@ -79,7 +79,7 @@ namespace LibrarySystem.Application.Services
                 throw new NotFoundException(nameof(PublisherDto));
             }
 
-            if (await _repository.ExistsByNameAsync(publisherDto.Name))
+            if (await _repository.ExistsByNameAsync(publisherDto.Name, publisherDto.Id))
             {
                 throw new RepetitionException(nameof(publisherDto));
             }
@@ -100,6 +100,11 @@ namespace LibrarySystem.Application.Services
 
             _repository.Delete(publisherToDelete);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<LookupItemDto>> GetLookupAsync()
+        {
+            return await _repository.GetLookupAsync();
         }
     }
 

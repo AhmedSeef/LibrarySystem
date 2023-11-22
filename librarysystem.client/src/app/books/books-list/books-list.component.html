@@ -1,0 +1,34 @@
+<div class="mb-2">
+    <button class="btn btn-success mr-2" (click)="redirectToBookForm()">Add New Book</button>
+    <label>
+      <input type="checkbox" (change)="toggleIncludeDeleted()" [(ngModel)]="includeDeleted"> Include Deleted Books
+    </label>
+  </div>
+  
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Created By</th>
+        <th>Published By</th>
+        <th>Is Deleted</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of books" [ngClass]="{'bg-success': !book.isDeleted, 'bg-danger': book.isDeleted}">
+        <td>{{ book.name }}</td>
+        <td>{{ book.authorDto.name}}</td>
+        <td>{{ book.publisherDto.name }}</td>
+        <td>
+          <input type="checkbox" [checked]="book.isDeleted" disabled />
+        </td>
+        <td>
+          <button class="btn btn-primary" (click)="openEditModal(book)">Edit</button>
+          <button class="btn btn-danger" (click)="openDeleteModal(book)">Delete</button>
+          <button class="btn btn-info" (click)="openViewModal(book)">View</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  

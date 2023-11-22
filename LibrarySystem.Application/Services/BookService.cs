@@ -36,7 +36,7 @@ namespace LibrarySystem.Application.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            if (await _repository.ExistsByNameAsync(bookDto.Name))
+            if (await _repository.ExistsByNameAsync(bookDto.Name, bookDto.Id))
             {
                 throw new RepetitionException(nameof(bookDto));
             }
@@ -58,10 +58,10 @@ namespace LibrarySystem.Application.Services
             return _mapper.Map<BookWithAutorsPublishersDto>(book);
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllAsync(bool includeDeleted)
+        public async Task<IEnumerable<BookWithAutorsPublishersDto>> GetAllAsync(bool includeDeleted)
         {
-            var books = await _repository.GetAllAsync(includeDeleted);
-            return _mapper.Map<IEnumerable<BookDto>>(books);
+            var books = await _repository.GetAllAsync(includeDeleted, entity => entity.Author, entity => entity.Publisher);
+            return _mapper.Map<IEnumerable<BookWithAutorsPublishersDto>>(books);
         }
 
         public async Task UpdateAsync(BookDto bookDto)
@@ -78,7 +78,7 @@ namespace LibrarySystem.Application.Services
                 throw new NotFoundException(nameof(BookDto));
             }
 
-            if (await _repository.ExistsByNameAsync(bookDto.Name))
+            if (await _repository.ExistsByNameAsync(bookDto.Name, bookDto.Id))
             {
                 throw new RepetitionException(nameof(bookDto));
             }

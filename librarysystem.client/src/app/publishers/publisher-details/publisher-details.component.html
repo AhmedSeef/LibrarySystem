@@ -1,0 +1,6 @@
+<div class="card" *ngIf="publisher">
+    <div class="card-body">
+        <h2 class="card-title">{{ publisher.name }}</h2>
+        <p class="card-text">Created At: {{ publisher.createdAt | date: 'medium' }}</p>
+    </div>
+</div>

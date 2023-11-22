@@ -1,0 +1,33 @@
+<div class="mb-2">
+    <button class="btn btn-success mr-2" (click)="redirectToAuthorForm()">Add New Author</button>
+    <label>
+        <input type="checkbox"  (change)="toggleIncludeDeleted()" [(ngModel)]="includeDeleted"> Include Deleted Authors
+    </label>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Created At</th>
+            <th>Edited At</th>
+            <th>Is Deleted</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let author of authors" [ngClass]="{'bg-success': !author.isDeleted, 'bg-danger': author.isDeleted}">
+            <td>{{ author.name }}</td>
+            <td>{{ author.createdAt | date: 'short' }}</td>
+            <td>{{ author.editedAt ? (author.editedAt | date: 'short') : '-' }}</td>
+            <td>
+                <input type="checkbox" [checked]="author.isDeleted" disabled />
+            </td>
+            <td>
+                <button class="btn btn-primary" (click)="openEditModal(author)">Edit</button>
+                <button class="btn btn-danger" (click)="openDeleteModal(author)">Delete</button>
+                <button class="btn btn-info" (click)="openViewModal(author)">View</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
